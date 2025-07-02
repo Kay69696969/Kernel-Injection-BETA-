@@ -356,7 +356,7 @@ int inject(const char *pkg_name, const char *lib_name) {
         printf("[+] Hook is currently %s\n", is_hook_enabled() ? "ENABLED" : "DISABLED");
         printf("[+] You can now call enable_hook()/disable_hook() to control behavior\n");
         
-        printf("[+] Hook is active. Press Ctrl+C to exit.\n");
+        printf("[+] Hook is active.\n");
         while (1) {
             sleep(1);
         }
