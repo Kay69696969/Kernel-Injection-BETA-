@@ -1,0 +1,50 @@
+cmake_minimum_required(VERSION 3.4.1)
+project(BSHook LANGUAGES C)
+
+# Set common compile flags for both targets
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -Wall -Wextra")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -g -O0")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
+
+# Build shared library
+add_library(bs_hook SHARED base.c)
+
+# Set library properties
+set_target_properties(bs_hook PROPERTIES
+    C_STANDARD 11
+    C_STANDARD_REQUIRED ON
+    POSITION_INDEPENDENT_CODE ON
+    VERSION 1.0.0
+    SOVERSION 1
+)
+
+# Build main executable
+add_executable(bs_inject main.c)
+
+# Common link libraries for both targets
+foreach(TARGET bs_hook bs_inject)
+    target_link_libraries(${TARGET} PRIVATE
+        dl
+        log
+    )
+    
+    # Android-specific settings
+    if(ANDROID)
+        target_compile_definitions(${TARGET} PRIVATE -DANDROID)
+        
+        # NDK-specific settings
+        set_target_properties(${TARGET} PROPERTIES
+            ANDROID_ARM_NEON TRUE
+            ANDROID_TOOLCHAIN clang
+        )
+    endif()
+endforeach()
+
+# Additional Android NDK settings
+if(ANDROID)
+    # Enable C++ exceptions and RTTI
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fexceptions -frtti")
+    
+    # Security hardening flags
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fstack-protector-strong -D_FORTIFY_SOURCE=2")
+endif()
