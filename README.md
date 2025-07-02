@@ -1,2 +1,2 @@
-Kernel Injection + Hooking, discord : @kay133769 this project is in beta state, soon changes,
+this injector is between kernel and usermode, Hooking etc , discord : @kay133769 this project is in beta state, soon changes,
 games tested on : brawl stars
